@@ -1,0 +1,78 @@
+/* Základní nastavení celé stránky */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5; /* Světle šedé pozadí */
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Omezení šířky a vycentrování */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Styl pro jednotlivé bloky (karty) */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+h1, h2 { color: #1a73e8; }
+
+/* Stylování vstupních polí */
+input[type="text"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Zajistí, že padding nerozbije šířku */
+    font-family: inherit;
+}
+
+textarea { height: 120px; resize: vertical; }
+
+/* Základní tlačítka */
+button {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+button:hover { background-color: #1557b0; }
+#cancel-btn, .btn-delete { background-color: #f44336; }
+#cancel-btn:hover, .btn-delete:hover { background-color: #d32f2f; }
+.btn-use { background-color: #4caf50; }
+.btn-use:hover { background-color: #388e3c; }
+.btn-edit { background-color: #ff9800; }
+.btn-edit:hover { background-color: #f57c00; }
+
+/* Stylování seznamu šablon */
+ul { list-style-type: none; padding: 0; }
+li {
+    background: #f9f9f9;
+    margin: 8px 0;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.actions button { padding: 6px 12px; font-size: 0.9em; margin-right: 5px; }
+
+/* Skupina pro doplňování proměnných */
+.var-input-group { margin-bottom: 10px; display: flex; align-items: center; }
+.var-input-group label { font-weight: bold; width: 60px; color: #1a73e8; }
+.var-input-group input { flex-grow: 1; margin: 0; }
