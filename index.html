@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generátor textových šablon</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Můj generátor šablon</h1>
+
+        <div class="card">
+            <h2>Vytvořit / Upravit šablonu</h2>
+            <input type="hidden" id="edit-id"> <input type="text" id="template-title" placeholder="Název šablony (např. Omluvenka)...">
+            <textarea id="template-text" placeholder="Zde vložte text. Použijte (V.1), (V.2) pro místa, která se budou doplňovat..."></textarea>
+            
+            <button onclick="saveTemplate()" id="save-btn">Uložit šablonu</button>
+            <button onclick="cancelEdit()" id="cancel-btn" style="display:none;">Zrušit úpravu</button>
+        </div>
+
+        <div class="card">
+            <h2>Moje uložené texty</h2>
+            <ul id="template-list">
+                </ul>
+        </div>
+
+        <div class="card" id="use-section" style="display: none;">
+            <h2>Vyplňování: <span id="use-title"></span></h2>
+            
+            <div id="variable-inputs">
+                </div>
+            
+            <button onclick="generateText()" class="btn-primary">Vygenerovat hotový text</button>
+            
+            <textarea id="result-text" readonly placeholder="Zde se objeví hotový výsledek..."></textarea>
+            <button onclick="copyResult()">Kopírovat výsledek</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
