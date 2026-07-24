@@ -12,8 +12,12 @@
 
         <div class="card">
             <h2>Vytvořit / Upravit šablonu</h2>
-            <input type="hidden" id="edit-id"> <input type="text" id="template-title" placeholder="Název šablony (např. Omluvenka)...">
-            <textarea id="template-text" placeholder="Zde vložte text. Použijte (V.1), (V.2) pro místa, která se budou doplňovat..."></textarea>
+            <input type="hidden" id="edit-id">
+            
+            <input type="text" id="template-title" placeholder="Název šablony (např. Omluvenka)...">
+            <textarea id="template-text" placeholder="Zde vložte text. Použijte (V.1), (V.2) pro místa k doplnění..."></textarea>
+            
+            <div id="variable-names-setup" style="margin-bottom: 15px;"></div>
             
             <button onclick="saveTemplate()" id="save-btn">Uložit šablonu</button>
             <button onclick="cancelEdit()" id="cancel-btn" style="display:none;">Zrušit úpravu</button>
@@ -21,15 +25,13 @@
 
         <div class="card">
             <h2>Moje uložené texty</h2>
-            <ul id="template-list">
-                </ul>
+            <ul id="template-list"></ul>
         </div>
 
         <div class="card" id="use-section" style="display: none;">
             <h2>Vyplňování: <span id="use-title"></span></h2>
             
-            <div id="variable-inputs">
-                </div>
+            <div id="variable-inputs"></div>
             
             <button onclick="generateText()" class="btn-primary">Vygenerovat hotový text</button>
             
