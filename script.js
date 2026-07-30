@@ -264,3 +264,7 @@ function copyResult() {
     document.execCommand('copy');
     alert('Výsledek byl zkopírován do schránky!');
 }
+// --- 7. ZAVŘENÍ SEKCE VYPLŇOVÁNÍ ---
+function closeUseSection() {
+    document.getElementById('use-section').style.display = 'none';
+}
