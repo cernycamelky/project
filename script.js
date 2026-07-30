@@ -1,20 +1,57 @@
+// --- 1. ZÁKLADNÍ NASTAVENÍ A NAČTENÍ DAT ---
 let templates = JSON.parse(localStorage.getItem('templates')) || [];
 let currentUseId = null;
 
+// Po načtení stránky se spustí tyto funkce
 document.addEventListener('DOMContentLoaded', () => {
-    renderList();
-    // NOVÉ: Přidáme "posluchače", který reaguje na každé napsané písmeno v textovém poli
-    document.getElementById('template-text').addEventListener('input', detectVariables);
+    renderList(); // Vykreslí seznam šablon
+    document.getElementById('template-text').addEventListener('input', detectVariables); // Sleduje psaní textu
+    checkTheme(); // Zkontroluje, zda měl uživatel zapnutý tmavý režim
 });
 
-// NOVÁ FUNKCE: Hledá proměnné v textu a tvoří políčka pro jejich pojmenování
+
+// --- 2. TMAVÝ REŽIM (Dark mode) ---
+function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+    const btn = document.getElementById('theme-toggle');
+    
+    if (document.body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+        btn.innerText = '☀️ Světlý režim';
+        btn.style.backgroundColor = '#f0f2f5';
+        btn.style.color = '#333';
+    } else {
+        localStorage.setItem('theme', 'light');
+        btn.innerText = '🌙 Tmavý režim';
+        btn.style.backgroundColor = '#333';
+        btn.style.color = 'white';
+    }
+}
+
+function checkTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const btn = document.getElementById('theme-toggle');
+    
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        // Musíme upravit i tlačítko, aby odpovídalo tmavému režimu
+        if (btn) {
+            btn.innerText = '☀️ Světlý režim';
+            btn.style.backgroundColor = '#f0f2f5';
+            btn.style.color = '#333';
+        }
+    }
+}
+
+
+// --- 3. DETEKCE A POJMENOVÁNÍ PROMĚNNÝCH ---
 function detectVariables() {
     const text = document.getElementById('template-text').value;
-    const regex = /\(V\.\d+\)/g;
+    const regex = /\(V\.\d+\)/g; // Hledá (V.1), (V.2) atd.
     const matches = text.match(regex);
     const container = document.getElementById('variable-names-setup');
     
-    // Zapamatujeme si to, co už uživatel do názvů napsal, ať se to při dalším psaní nesmaže
+    // Zapamatujeme si text z políček, ať se při dalším psaní nesmaže
     const existingInputs = {};
     container.querySelectorAll('input').forEach(input => {
         existingInputs[input.dataset.var] = input.value;
@@ -23,7 +60,7 @@ function detectVariables() {
     container.innerHTML = ''; // Vyčistíme kontejner
 
     if (matches) {
-        const uniqueVars = [...new Set(matches)];
+        const uniqueVars = [...new Set(matches)]; // Odstraní duplikáty
         
         const infoText = document.createElement('p');
         infoText.style = "color: #1a73e8; font-size: 0.9em; margin-bottom: 5px; font-weight: bold;";
@@ -34,7 +71,6 @@ function detectVariables() {
             const div = document.createElement('div');
             div.className = 'var-input-group';
             
-            // Pokud už políčko mělo hodnotu, vrátíme ji tam
             const savedValue = existingInputs[variable] || '';
             
             div.innerHTML = `
@@ -46,6 +82,8 @@ function detectVariables() {
     }
 }
 
+
+// --- 4. UKLÁDÁNÍ A ÚPRAVA ŠABLON ---
 function saveTemplate() {
     const title = document.getElementById('template-title').value.trim();
     const text = document.getElementById('template-text').value.trim();
@@ -56,7 +94,7 @@ function saveTemplate() {
         return;
     }
 
-    // NOVÉ: Získáme vlastní názvy proměnných z vygenerovaných políček
+    // Uložení vlastních názvů proměnných
     const customVarNames = {};
     document.querySelectorAll('.var-name-input').forEach(input => {
         if (input.value.trim() !== '') {
@@ -65,19 +103,21 @@ function saveTemplate() {
     });
 
     if (editId) {
+        // Úprava existující šablony
         const index = templates.findIndex(t => t.id == editId);
         if (index !== -1) {
             templates[index].title = title;
             templates[index].text = text;
-            templates[index].varNames = customVarNames; // Uložíme i jména
+            templates[index].varNames = customVarNames;
         }
         cancelEdit();
     } else {
+        // Vytvoření nové šablony
         const newTemplate = {
             id: Date.now(),
             title: title,
             text: text,
-            varNames: customVarNames // Uložíme i jména
+            varNames: customVarNames
         };
         templates.push(newTemplate);
     }
@@ -86,7 +126,7 @@ function saveTemplate() {
     
     document.getElementById('template-title').value = '';
     document.getElementById('template-text').value = '';
-    document.getElementById('variable-names-setup').innerHTML = ''; // Vyčistíme políčka pro názvy
+    document.getElementById('variable-names-setup').innerHTML = ''; 
     
     renderList();
 }
@@ -100,6 +140,8 @@ function cancelEdit() {
     document.getElementById('cancel-btn').style.display = 'none';
 }
 
+
+// --- 5. SEZNAM ULOŽENÝCH TEXTŮ ---
 function renderList() {
     const list = document.getElementById('template-list');
     list.innerHTML = '';
@@ -135,10 +177,9 @@ function editTemplate(id) {
         document.getElementById('save-btn').innerText = 'Uložit změny';
         document.getElementById('cancel-btn').style.display = 'inline-block';
         
-        // Počkáme chvilku a zavoláme detekci, aby se zobrazila políčka s názvy proměnných
+        // Znovu vygenerujeme políčka pro úpravu proměnných
         setTimeout(() => {
             detectVariables();
-            // Dosadíme uložená jména zpět do políček
             if (template.varNames) {
                 document.querySelectorAll('.var-name-input').forEach(input => {
                     const varKey = input.dataset.var;
@@ -153,6 +194,8 @@ function editTemplate(id) {
     }
 }
 
+
+// --- 6. POUŽITÍ ŠABLONY A GENEROVÁNÍ VÝSLEDKU ---
 function useTemplate(id) {
     currentUseId = id;
     const template = templates.find(t => t.id === id);
@@ -174,7 +217,7 @@ function useTemplate(id) {
             const div = document.createElement('div');
             div.className = 'var-input-group';
             
-            // NOVÉ: Pokud máme uložený vlastní název, použijeme ho. Jinak použijeme (V.1).
+            // Pokud máme uložený vlastní název, použijeme ho
             let displayName = variable;
             if (template.varNames && template.varNames[variable]) {
                 displayName = template.varNames[variable];
@@ -205,6 +248,7 @@ function generateText() {
         const uniqueVars = [...new Set(matches)];
         uniqueVars.forEach(variable => {
             const inputValue = document.getElementById(`input-${variable}`).value;
+            // Nahradí všechny výskyty (V.X) za uživatelův text
             finalText = finalText.split(variable).join(inputValue);
         });
     }
